@@ -26,7 +26,11 @@ The API docs are available at `http://localhost:8000/docs`. Run the backend test
 
 ## Market-data provider
 
-The first provider is Alpaca's free IEX feed. It is intended for development and initial scanner testing; IEX is not consolidated US-market volume, so production volume signals should be validated before relying on them. Create an Alpaca account, generate API keys, and add them only to the ignored `backend/.env` file. The provider requests adjusted daily bars and can be replaced later without changing scanner code.
+The default development provider is Yahoo Finance through `yfinance`, so the scanner can run without API keys. This is intended for private personal development and should not be treated as a guaranteed production feed. Alpaca's free IEX provider is also implemented as an optional provider; set `TRADEPILOT_MARKET_DATA_PROVIDER=alpaca_iex` and add Alpaca credentials to use it. The provider abstraction keeps both options replaceable without changing scanner code.
+
+## Run a scanner
+
+Start the API, then use the interactive docs at `http://localhost:8000/docs` and call `POST /api/scanner/run`. You can pass a small symbol list such as `AAPL`, `MSFT`, and `NVDA`, or omit it to use the configured default universe. Signals are labeled as personal-development data and are not trading recommendations.
 
 ## Planned architecture
 

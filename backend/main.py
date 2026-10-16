@@ -1,12 +1,14 @@
 from datetime import UTC, datetime
 from os import getenv
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 from backend.supabase_connection import check_supabase_connection
+from backend.scanner import run_basic_scan
+from backend.market_data.models import MarketDataProviderError
 
 load_dotenv("backend/.env")
 
@@ -22,6 +24,16 @@ class HealthResponse(BaseModel):
 class SupabaseStatusResponse(BaseModel):
     configured: bool
     state: str
+
+
+class ScannerRequest(BaseModel):
+    symbols: list[str] | None = None
+
+
+class ScannerResponse(BaseModel):
+    source: str
+    count: int
+    signals: list[dict]
 
 
 app = FastAPI(
@@ -60,3 +72,12 @@ def supabase_status() -> SupabaseStatusResponse:
     """Check Supabase reachability without returning credentials or response payloads."""
     reachable, state = check_supabase_connection()
     return SupabaseStatusResponse(configured=reachable, state=state)
+
+
+@app.post("/api/scanner/run", response_model=ScannerResponse, tags=["scanner"])
+def scanner_run(request: ScannerRequest) -> ScannerResponse:
+    try:
+        signals = run_basic_scan(request.symbols)
+    except MarketDataProviderError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return ScannerResponse(source="yahoo_yfinance_personal", count=len(signals), signals=signals)
