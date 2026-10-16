@@ -32,6 +32,19 @@ The default development provider is Yahoo Finance through `yfinance`, so the sca
 
 Start the API, then use the interactive docs at `http://localhost:8000/docs` and call `POST /api/scanner/run`. You can pass a small symbol list such as `AAPL`, `MSFT`, and `NVDA`, or omit it to use the configured default universe. Signals are labeled as personal-development data and are not trading recommendations.
 
+For the dashboard to call the scanner, run both services in separate terminals:
+
+```bash
+# Terminal 1
+source .venv/bin/activate
+uvicorn backend.main:app --reload --port 8000
+
+# Terminal 2
+npm run dev
+```
+
+Then open `http://localhost:3000` and click **Run scanner**. The button calls the real FastAPI endpoint and replaces the illustrative opportunity table with the returned signals.
+
 ## Planned architecture
 
 ```text
