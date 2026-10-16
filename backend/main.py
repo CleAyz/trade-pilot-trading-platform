@@ -46,12 +46,19 @@ app = FastAPI(
 
 # Keep this narrow for local development. Production origins should be set explicitly
 # when the frontend and API are deployed behind access controls.
-frontend_origin = getenv("TRADEPILOT_FRONTEND_ORIGIN", "http://localhost:3000")
+frontend_origins = [
+    origin.strip()
+    for origin in getenv(
+        "TRADEPILOT_FRONTEND_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000",
+    ).split(",")
+    if origin.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_origin],
+    allow_origins=frontend_origins,
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
 
