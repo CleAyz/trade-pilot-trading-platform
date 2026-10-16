@@ -24,6 +24,10 @@ uvicorn backend.main:app --reload --port 8000
 
 The API docs are available at `http://localhost:8000/docs`. Run the backend test with `pytest` from the repository root.
 
+## Market-data provider
+
+The first provider is Alpaca's free IEX feed. It is intended for development and initial scanner testing; IEX is not consolidated US-market volume, so production volume signals should be validated before relying on them. Create an Alpaca account, generate API keys, and add them only to the ignored `backend/.env` file. The provider requests adjusted daily bars and can be replaced later without changing scanner code.
+
 ## Planned architecture
 
 ```text
