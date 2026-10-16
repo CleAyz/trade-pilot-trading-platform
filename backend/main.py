@@ -4,6 +4,11 @@ from os import getenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+from backend.supabase_connection import check_supabase_connection
+
+load_dotenv("backend/.env")
 
 
 class HealthResponse(BaseModel):
@@ -12,6 +17,11 @@ class HealthResponse(BaseModel):
     demo_mode: bool
     data_provider: str
     checked_at: datetime
+
+
+class SupabaseStatusResponse(BaseModel):
+    configured: bool
+    state: str
 
 
 app = FastAPI(
@@ -43,3 +53,10 @@ def health() -> HealthResponse:
         data_provider=provider,
         checked_at=datetime.now(UTC),
     )
+
+
+@app.get("/api/supabase/status", response_model=SupabaseStatusResponse, tags=["system"])
+def supabase_status() -> SupabaseStatusResponse:
+    """Check Supabase reachability without returning credentials or response payloads."""
+    reachable, state = check_supabase_connection()
+    return SupabaseStatusResponse(configured=reachable, state=state)
