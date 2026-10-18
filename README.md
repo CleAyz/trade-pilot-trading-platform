@@ -45,6 +45,8 @@ npm run dev
 
 Then open `http://localhost:3000` and click **Run scanner**. The button calls the real FastAPI endpoint and replaces the illustrative opportunity table with the returned signals.
 
+Daily bars are cached in `work/market_data.sqlite3`, which is ignored by Git. The first scan downloads the historical window; later scans refresh only a small recent window and read the rest locally. Delete the cache file only if you intentionally want to rebuild the local history.
+
 ## Planned architecture
 
 ```text

@@ -22,6 +22,7 @@ __pycache__/
 
 # production
 /build
+/work/
 
 # misc
 .DS_Store

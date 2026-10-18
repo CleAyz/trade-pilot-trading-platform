@@ -3,6 +3,7 @@ from os import getenv
 
 import pandas as pd
 
+from backend.market_data.cache import CachedYahooMarketDataProvider
 from backend.market_data.yahoo import YahooMarketDataProvider
 
 DEFAULT_UNIVERSE = ["AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "AVGO", "LLY", "JPM", "ORCL"]
@@ -12,7 +13,7 @@ def run_basic_scan(symbols: list[str] | None = None) -> list[dict]:
     universe = symbols or [s.strip().upper() for s in getenv("TRADEPILOT_SCANNER_SYMBOLS", ",".join(DEFAULT_UNIVERSE)).split(",") if s.strip()]
     end = date.today()
     start = end - timedelta(days=420)
-    bars = YahooMarketDataProvider().daily_bars(universe, start, end)
+    bars = CachedYahooMarketDataProvider(YahooMarketDataProvider()).daily_bars(universe, start, end)
     results: list[dict] = []
 
     for symbol in universe:
