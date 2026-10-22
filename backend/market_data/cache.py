@@ -79,6 +79,26 @@ class DailyBarCache:
             for row in rows
         ]
 
+    def recent(self, symbol: str | None = None, limit: int = 100) -> list[DailyBar]:
+        filters = "where symbol = ?" if symbol else ""
+        params = [symbol.upper()] if symbol else []
+        with sqlite3.connect(self.path) as connection:
+            rows = connection.execute(
+                f"""
+                select symbol, trading_date, open, high, low, close, volume, adjusted, source
+                from daily_bars {filters}
+                order by trading_date desc, symbol asc limit ?
+                """,
+                [*params, limit],
+            ).fetchall()
+        return [
+            DailyBar(
+                symbol=row[0], trading_date=date.fromisoformat(row[1]), open=row[2], high=row[3],
+                low=row[4], close=row[5], volume=row[6], adjusted=bool(row[7]), source=row[8],
+            )
+            for row in rows
+        ]
+
 
 class CachedYahooMarketDataProvider:
     name = "yahoo_yfinance_personal_cached"

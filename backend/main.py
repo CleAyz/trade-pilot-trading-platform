@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from backend.supabase_connection import check_supabase_connection
 from backend.scanner import DEFAULT_UNIVERSE, run_basic_scan
 from backend.market_data.models import MarketDataProviderError
+from backend.market_data.cache import DailyBarCache
 
 load_dotenv("backend/.env")
 
@@ -36,6 +37,12 @@ class ScannerResponse(BaseModel):
     scanned_count: int
     scanned_at: datetime
     signals: list[dict]
+
+
+class MarketDataResponse(BaseModel):
+    source: str
+    count: int
+    rows: list[dict]
 
 
 app = FastAPI(
@@ -95,4 +102,16 @@ def scanner_run(request: ScannerRequest) -> ScannerResponse:
         scanned_count=len(request.symbols or DEFAULT_UNIVERSE),
         scanned_at=datetime.now(UTC),
         signals=signals,
+    )
+
+
+@app.get("/api/market-data", response_model=MarketDataResponse, tags=["market-data"])
+def market_data(symbol: str | None = None, limit: int = 100) -> MarketDataResponse:
+    """Read cached daily bars for inspection without exposing filesystem paths."""
+    safe_limit = min(max(limit, 1), 500)
+    rows = DailyBarCache().recent(symbol=symbol, limit=safe_limit)
+    return MarketDataResponse(
+        source="local_sqlite_cache",
+        count=len(rows),
+        rows=[row.model_dump(mode="json") for row in rows],
     )
