@@ -11,6 +11,7 @@ from backend.scanner import DEFAULT_UNIVERSE, run_basic_scan
 from backend.market_data.models import MarketDataProviderError
 from backend.market_data.cache import DailyBarCache
 from backend.portfolio import PortfolioStoreError, get_portfolio_summary, save_account
+from backend.ibkr import IBKRConnectionError, read_ibkr_portfolio
 
 load_dotenv("backend/.env")
 
@@ -63,6 +64,15 @@ class PortfolioResponse(BaseModel):
     allocated_cash: float
     open_positions: int
     planned_risk: float
+
+
+class IBKRPortfolioResponse(BaseModel):
+    account_id: str
+    base_currency: str
+    account_value: float
+    available_cash: float
+    positions: list[dict]
+    source: str
 
 
 app = FastAPI(
@@ -154,4 +164,13 @@ def portfolio_account(settings: AccountSettings) -> dict:
     try:
         return save_account(settings.model_dump())
     except PortfolioStoreError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/api/ibkr/portfolio", response_model=IBKRPortfolioResponse, tags=["ibkr"])
+def ibkr_portfolio() -> IBKRPortfolioResponse:
+    """Read balances and positions from a locally running IBKR TWS/Gateway session."""
+    try:
+        return IBKRPortfolioResponse(**read_ibkr_portfolio())
+    except IBKRConnectionError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc

@@ -9,6 +9,7 @@
 .portfolio-form input{width:100%;min-height:36px;border:1px solid var(--border);border-radius:6px;background:#0e1719;color:var(--text);padding:9px 10px;outline:none;font:11px 'DM Mono',monospace}
 .portfolio-form input:focus{border-color:var(--mint);box-shadow:0 0 0 2px rgba(100,217,172,.12)}
 .portfolio-editor>.scan-button{margin-left:21px}
+.portfolio-actions{display:flex;gap:8px}
 @media(max-width:700px){.portfolio-form{grid-template-columns:1fr}}
 .opportunities .table-wrap{overflow-x:auto}
 .opportunities table{min-width:760px}

@@ -51,6 +51,10 @@ Daily bars are cached in `work/market_data.sqlite3`, which is ignored by Git. Th
 
 Run `supabase/migrations/0002_portfolio.sql` in the Supabase SQL Editor after the initial migration. Then open the **Portfolio** page in the dashboard and enter your account value, available cash, risk settings, and maximum position count. The dashboard's capital panel will use the saved Supabase values instead of demo figures.
 
+## Optional IBKR read-only connection
+
+TradePilot can read account value, available funds, and open positions from a locally running IBKR Trader Workstation session. It does not place orders. Install the backend requirements, start TWS with API socket clients enabled, and use paper-trading port `7497` first. Configure `IBKR_HOST`, `IBKR_PORT`, `IBKR_CLIENT_ID`, and `IBKR_BASE_CURRENCY` in `backend/.env` if the defaults do not match your setup.
+
 ## Planned architecture
 
 ```text
