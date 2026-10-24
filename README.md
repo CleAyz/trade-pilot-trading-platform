@@ -47,6 +47,10 @@ Then open `http://localhost:3000` and click **Run scanner**. The button calls th
 
 Daily bars are cached in `work/market_data.sqlite3`, which is ignored by Git. The first scan downloads the historical window; later scans refresh only a small recent window and read the rest locally. Delete the cache file only if you intentionally want to rebuild the local history.
 
+## Portfolio setup
+
+Run `supabase/migrations/0002_portfolio.sql` in the Supabase SQL Editor after the initial migration. Then open the **Portfolio** page in the dashboard and enter your account value, available cash, risk settings, and maximum position count. The dashboard's capital panel will use the saved Supabase values instead of demo figures.
+
 ## Planned architecture
 
 ```text

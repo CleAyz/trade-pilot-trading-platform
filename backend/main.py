@@ -10,6 +10,7 @@ from backend.supabase_connection import check_supabase_connection
 from backend.scanner import DEFAULT_UNIVERSE, run_basic_scan
 from backend.market_data.models import MarketDataProviderError
 from backend.market_data.cache import DailyBarCache
+from backend.portfolio import PortfolioStoreError, get_portfolio_summary, save_account
 
 load_dotenv("backend/.env")
 
@@ -43,6 +44,25 @@ class MarketDataResponse(BaseModel):
     source: str
     count: int
     rows: list[dict]
+
+
+class AccountSettings(BaseModel):
+    base_currency: str = "SGD"
+    account_value: float
+    available_cash: float
+    risk_per_trade: float = 0.5
+    max_position_allocation: float = 20
+    max_positions: int = 4
+
+
+class PortfolioResponse(BaseModel):
+    account: dict | None
+    positions: list[dict]
+    account_value: float
+    available_cash: float
+    allocated_cash: float
+    open_positions: int
+    planned_risk: float
 
 
 app = FastAPI(
@@ -115,3 +135,23 @@ def market_data(symbol: str | None = None, limit: int = 100) -> MarketDataRespon
         count=len(rows),
         rows=[row.model_dump(mode="json") for row in rows],
     )
+
+
+@app.get("/api/portfolio/summary", response_model=PortfolioResponse, tags=["portfolio"])
+def portfolio_summary() -> PortfolioResponse:
+    try:
+        return PortfolioResponse(**get_portfolio_summary())
+    except PortfolioStoreError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/portfolio/account", response_model=dict, tags=["portfolio"])
+def portfolio_account(settings: AccountSettings) -> dict:
+    if settings.account_value < 0 or settings.available_cash < 0:
+        raise HTTPException(status_code=422, detail="Account value and available cash cannot be negative")
+    if settings.available_cash > settings.account_value:
+        raise HTTPException(status_code=422, detail="Available cash cannot exceed account value")
+    try:
+        return save_account(settings.model_dump())
+    except PortfolioStoreError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
