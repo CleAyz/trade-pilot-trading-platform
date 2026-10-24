@@ -10,3 +10,11 @@
 .portfolio-form input:focus{border-color:var(--mint);box-shadow:0 0 0 2px rgba(100,217,172,.12)}
 .portfolio-editor>.scan-button{margin-left:21px}
 @media(max-width:700px){.portfolio-form{grid-template-columns:1fr}}
+.opportunities .table-wrap{overflow-x:auto}
+.opportunities table{min-width:760px}
+.opportunities th:nth-child(1){min-width:150px}
+.opportunities th:nth-child(2){min-width:180px}
+.opportunities th:nth-child(3){min-width:70px}
+.data-viewer-meta{display:flex;justify-content:space-between;gap:16px;padding:0 21px 12px;color:var(--muted);font-size:10px}
+.data-viewer .table-wrap{overflow-x:auto}
+.data-viewer table{min-width:760px}
