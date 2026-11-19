@@ -1,3 +1,4 @@
+import asyncio
 from os import getenv
 
 
@@ -16,6 +17,12 @@ def _number(values: list, tag: str) -> float:
 
 
 def read_ibkr_portfolio() -> dict:
+    # ib_insync expects an event loop even when its synchronous API is called
+    # from FastAPI's worker thread or the background sync thread.
+    try:
+        asyncio.get_event_loop()
+    except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
     try:
         from ib_insync import IB
     except ImportError as exc:

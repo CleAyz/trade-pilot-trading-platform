@@ -111,11 +111,13 @@ class CachedYahooMarketDataProvider:
         normalized = sorted({symbol.upper() for symbol in symbols})
         if not normalized:
             return []
-        fetch_start = start
+        groups: dict[date, list[str]] = {}
         for symbol in normalized:
             latest = self.cache.latest_date(symbol)
-            if latest:
-                fetch_start = min(fetch_start, max(start, latest - timedelta(days=5)))
-        fresh = self.provider.daily_bars(normalized, fetch_start, end)
-        self.cache.save(fresh)
+            fetch_start = max(start, latest - timedelta(days=5)) if latest else start
+            groups.setdefault(fetch_start, []).append(symbol)
+        for fetch_start, group in groups.items():
+            for index in range(0, len(group), 25):
+                fresh = self.provider.daily_bars(group[index:index + 25], fetch_start, end)
+                self.cache.save(fresh)
         return self.cache.load(normalized, start, end)

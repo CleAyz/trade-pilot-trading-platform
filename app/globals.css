@@ -11,6 +11,18 @@
 .portfolio-editor>.scan-button{margin-left:21px}
 .portfolio-actions{display:flex;gap:8px}
 @media(max-width:700px){.portfolio-form{grid-template-columns:1fr}}
+.app.light body{background:var(--bg)}
+.app.light .sidebar{background:rgba(255,255,255,.82)}
+.app.light .nav-item:hover,.app.light .nav-item.active{background:#e6f0ec}
+.app.light .system-card{border-color:#cfe3da;background:#edf8f3}
+.app.light .metric-card,.app.light .stat-card,.app.light .panel{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(246,250,248,.98))}
+.app.light .orb-inner{background:#eef7f3}
+.app.light th{background:#f1f6f4}
+.app.light td{border-bottom-color:#dce6e2;color:#52686b}
+.app.light .portfolio-form input{background:#fff}
+.page-placeholder{padding:28px 21px;min-height:180px;margin-bottom:12px}
+.page-placeholder h3{margin:0 0 8px}
+.page-placeholder p{max-width:560px;line-height:1.6}
 .opportunities .table-wrap{overflow-x:auto}
 .opportunities table{min-width:760px}
 .opportunities th:nth-child(1){min-width:150px}
@@ -19,3 +31,21 @@
 .data-viewer-meta{display:flex;justify-content:space-between;gap:16px;padding:0 21px 12px;color:var(--muted);font-size:10px}
 .data-viewer .table-wrap{overflow-x:auto}
 .data-viewer table{min-width:760px}
+.signal-detail{padding-bottom:24px}
+.signal-summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 21px 20px;border-bottom:1px solid var(--border)}
+.signal-summary strong{display:block;color:var(--text);font-size:18px}
+.signal-summary span:not(.score-badge){display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.score-badge{border:1px solid var(--mint);border-radius:999px;color:var(--mint);font:500 12px 'DM Mono',monospace;padding:8px 11px;white-space:nowrap}
+.signal-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin:20px 21px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.signal-metrics div{background:var(--panel);padding:15px}
+.signal-metrics span{display:block;color:var(--muted);font-size:10px}
+.signal-metrics strong{display:block;color:var(--text);font:500 17px 'DM Mono',monospace;margin-top:8px}
+.signal-explanation{margin:0 21px 20px;padding:17px;border:1px solid var(--border);border-radius:6px;background:rgba(100,217,172,.04)}
+.signal-explanation p{color:var(--text);font-size:12px;line-height:1.6;margin:0 0 8px}
+.signal-explanation p.muted{font-size:10px;margin:0}
+.signal-detail>.scan-button{margin-left:21px}
+.empty-state{padding:22px 21px}
+.empty-state h4{margin:0 0 8px;font-size:14px}
+@media(max-width:700px){.signal-metrics{grid-template-columns:repeat(2,1fr)}.signal-summary{align-items:flex-start}.signal-detail>.scan-button{margin-left:21px}}
+.form-panel{padding:20px 21px;margin-bottom:12px}.form-panel label{display:grid;gap:8px;color:var(--muted);font-size:10px}.form-panel input,.watch-form input,.watch-form select,.watch-row select{min-height:36px;border:1px solid var(--border);border-radius:6px;background:#0e1719;color:var(--text);padding:9px 10px;outline:none;font:11px 'DM Mono',monospace}.form-panel input{width:100%;margin-bottom:10px}.form-panel p{line-height:1.5}.history-panel{margin-top:12px}.watch-form{display:flex;gap:8px;align-items:center;padding:0 21px}.watch-form input{flex:1}.watch-form select{width:130px}.watchlist-panel{padding:0 21px}.watch-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}.watch-row:last-child{border-bottom:0}.watch-row strong{display:block;color:var(--text);font-size:13px}.watch-row small{display:block;color:var(--muted);font-size:10px;margin-top:5px}.watch-row select{width:140px}.scan-error{color:#e78872;font-size:11px;line-height:1.5}.app.light .form-panel input,.app.light .watch-form input,.app.light .watch-form select,.app.light .watch-row select{background:#fff}.app.light .watch-row{border-bottom-color:var(--border)}
+@media(max-width:700px){.watch-form{display:grid;grid-template-columns:1fr}.watch-form select{width:100%}.watch-row{align-items:flex-start;flex-direction:column}.watch-row select{width:100%}}

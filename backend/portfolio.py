@@ -63,3 +63,28 @@ def save_account(payload: dict) -> dict:
         json={"id": ACCOUNT_ID, **payload},
     )
     return rows[0] if rows else {"id": ACCOUNT_ID, **payload}
+
+
+def sync_ibkr_portfolio(payload: dict) -> dict:
+    """Persist a successful IBKR snapshot while retaining local risk settings."""
+    current = get_portfolio_summary()
+    account = current.get("account") or {}
+    save_account(
+        {
+            "base_currency": payload["base_currency"],
+            "account_value": payload["account_value"],
+            "available_cash": payload["available_cash"],
+            "risk_per_trade": float(account.get("risk_per_trade", 0.5)),
+            "max_position_allocation": float(account.get("max_position_allocation", 20)),
+            "max_positions": int(account.get("max_positions", 4)),
+        }
+    )
+    _request("DELETE", "positions", params={"account_id": f"eq.{ACCOUNT_ID}"})
+    positions = [
+        {"account_id": ACCOUNT_ID, **position}
+        for position in payload.get("positions", [])
+        if float(position.get("quantity", 0) or 0) > 0 and float(position.get("average_price", 0) or 0) > 0
+    ]
+    if positions:
+        _request("POST", "positions", json=positions)
+    return {"account_id": ACCOUNT_ID, **payload}
