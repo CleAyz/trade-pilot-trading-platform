@@ -5,7 +5,7 @@ const nav = [["⌂", "Dashboard"], ["⌁", "Daily Scanner"], ["◌", "Stock Anal
 type Signal = { id?: string; ticker: string; setup: string; score: number; price: number; relative_volume: number; entry_price: number; stop_loss: number; target_price: number; risk_reward: number; explanation: string; source: string; signal_date?: string; scanned_at?: string; reviewed_at?: string | null };
 type AlertStatus = { enabled: boolean; notifier_configured: boolean };
 type WatchItem = { id: string; ticker: string; notes: string; status: string };
-const api = "http://localhost:8000";
+const api = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
 const money = (n: number) => `$${Number(n).toFixed(2)}`;
 
 export default function Home() {

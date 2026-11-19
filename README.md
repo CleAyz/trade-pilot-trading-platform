@@ -11,6 +11,8 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+When deploying the dashboard, set `NEXT_PUBLIC_API_BASE_URL` to the public FastAPI service URL (for example, your Render `onrender.com` URL). If unset, local development uses `http://localhost:8000`.
+
 ## FastAPI backend
 
 The initial backend is in `backend/`. It exposes `GET /api/health` and intentionally reports Demo Mode until `TRADEPILOT_MARKET_DATA_PROVIDER` is configured.
